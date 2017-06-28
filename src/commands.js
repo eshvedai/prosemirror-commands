@@ -209,7 +209,7 @@ exports.createParagraphNear = createParagraphNear
 // block.
 function liftEmptyBlock(state, dispatch) {
   let {$cursor} = state.selection
-  if (!$cursor || $cursor.parent.content.size) return false
+  if (!$cursor || $cursor.parent.content.size|| $cursor.node(-1).type.spec.isolating) return false
   if ($cursor.depth > 1 && $cursor.after() != $cursor.end(-1)) {
     let before = $cursor.before()
     if (canSplit(state.doc, before)) {
@@ -218,7 +218,7 @@ function liftEmptyBlock(state, dispatch) {
     }
   }
   let range = $cursor.blockRange(), target = range && liftTarget(range)
-  if (target == null) return false
+  if (typeof target !== 'number') return false
   if (dispatch) dispatch(state.tr.lift(range, target).scrollIntoView())
   return true
 }
